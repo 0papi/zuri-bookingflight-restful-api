@@ -1,14 +1,13 @@
 const express = require("express");
-const { json } = require("express");
-const flights = require("./controllers/flightController");
-const models = require("./models/Flight");
+const { json, urlencoded } = require("express");
 const routes = require("./routes/flightRoute");
 
 const app = express();
 
+app.use(urlencoded({ extended: true }));
 app.use(json());
 
-app.use("/", routes);
+app.use("/api/flights", routes);
 
 const port = process.env.PORT || 3000;
 
