@@ -21,7 +21,7 @@ exports.getAll = (req, res) => {
 // Allows user to create new flight booking
 // Method - POST
 exports.createNew = (req, res) => {
-  const { title, time, price, date } = req.body;
+  const { title, price } = req.body;
   if (!title || !price) {
     return res.json({ message: "Please make sure to provide all fields" });
   }
