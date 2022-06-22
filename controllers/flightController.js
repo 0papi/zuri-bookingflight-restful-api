@@ -1,7 +1,8 @@
-let id = 1;
+const { v4: uuid } = require("uuid");
+
 let flightData = [
   {
-    id: id,
+    id: uuid(),
     title: "flight to canada",
     time: "1pm",
     price: 26000,
@@ -13,8 +14,6 @@ let flightData = [
 // Responds with all available flights booking data
 // Method - GET
 exports.getAll = (req, res) => {
-  // console.log("Request Object", req);
-  console.log("Response Object", res);
   res.json(flightData);
 };
 
@@ -23,18 +22,18 @@ exports.getAll = (req, res) => {
 // Method - POST
 exports.createNew = (req, res) => {
   const { title, time, price, date } = req.body;
-  if (!title || !time || !price || !date) {
+  if (!title || !price) {
     return res.json({ message: "Please make sure to provide all fields" });
   }
-  const updatedFlights = flightData.push({
+  flightData.push({
     title,
-    time,
+    time: new Date().toLocaleTimeString(),
     price,
-    date,
-    id: id++,
+    date: new Date().toLocaleDateString(),
+    id: uuid(),
   });
 
-  res.json(updatedFlights);
+  res.json(flightData);
 };
 
 // Get single flight booking
@@ -43,6 +42,9 @@ exports.createNew = (req, res) => {
 exports.getSingle = (req, res) => {
   const { id } = req.params;
   const singleFlight = flightData.find((flight) => flight.id === id);
+  if (!singleFlight) {
+    return res.json({ message: "Flight not found" });
+  }
   res.json(singleFlight);
 };
 
@@ -51,12 +53,10 @@ exports.getSingle = (req, res) => {
 // Method - PUT
 exports.patchSingle = (req, res) => {
   const { id } = req.params;
-  const { title, price, time, date } = req.body;
+  const { title, price } = req.body;
   const bookingToBeUpdated = flightData.find((booking) => booking.id === id);
   if (bookingToBeUpdated) {
-    bookingToBeUpdated.date = date;
     bookingToBeUpdated.price = price;
-    bookingToBeUpdated.time = time;
     bookingToBeUpdated.title = title;
 
     res.json(bookingToBeUpdated);
