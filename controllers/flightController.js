@@ -1,5 +1,6 @@
 const { v4: uuid } = require("uuid");
 
+// dummy flight data
 let flightData = [
   {
     id: uuid(),
